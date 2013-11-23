@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #define STACKTYPE float
 #include "stack.c"
 
@@ -27,6 +28,7 @@ void interpret(char *word, stack *st) {
             return;
 
         default:
+            push(st, 0);
             return;
     }
 }
@@ -45,9 +47,10 @@ int main(int argc, char *argv[]) {
     stack stack;
     stack.len = 0;
 
-    eval(argv[1], &stack);
-
-    while(stack.len) {
-        printf("%g\n", pop(&stack));
+    char input[1024];
+    printf("> ");
+    while(fgets(input, 1024, stdin) != NULL) {
+        eval(input, &stack);
+        printf("> ");
     }
 }
