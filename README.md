@@ -10,6 +10,9 @@ Install
 $ make
 gcc -Wall -std=c99 -Werror rl.c -o rl.o
 ln -s rl.o rl
-$ ./rl "10 10 +"
-20
+$ ./rl
+> 5 2 * .
+10
+> ^D
+$
 ```
