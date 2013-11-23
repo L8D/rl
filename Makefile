@@ -4,7 +4,7 @@ LDFLAGS=
 SOURCES=rl.c
 OBJECTS=$(SOURCES:.c=.o)
 
-all: objects
+all: clean objects
 	ln -s rl.o rl
 
 objects:
