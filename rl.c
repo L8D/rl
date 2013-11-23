@@ -78,9 +78,7 @@ int main(int argc, char *argv[]) {
     stack.len = 0;
 
     char input[1024];
-    printf("> ");
     while(fgets(input, 1024, stdin) != NULL) {
         eval(input, &stack);
-        printf("> ");
     }
 }
