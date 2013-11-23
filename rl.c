@@ -32,7 +32,6 @@ void interpret(char *word, stack *st) {
 }
 
 void eval(char input[], stack *st) {
-    char d[] = " \n\t";
     char *r = NULL;
     r = strtok(input, WHITESPACE);
 
