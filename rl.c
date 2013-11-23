@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #define STACKTYPE float
+#define STACKLEN 256
 #include "stack.c"
 
 #define WHITESPACE " \t\n\v\f\r"

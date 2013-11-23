@@ -1,4 +1,4 @@
 typedef struct {
-    STACKTYPE arr[256];
+    STACKTYPE arr[STACKLEN];
     int len;
 } stack;
