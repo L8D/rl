@@ -4,7 +4,7 @@
 
 #define STACKTYPE float
 #define STACKLEN 256
-#include "stack.c"
+#include "rlwords.c"
 
 #define WHITESPACE " \t\n\v\f\r"
 #define OPER(op) n = pop(st); push(st, pop(st) op n); return
@@ -29,6 +29,8 @@ void interpret(char *word, stack *st) {
 
         case '>': BOOLOPER(>);
         case '<': BOOLOPER(<);
+        case '&': BOOLOPER(&&);
+        case '|': BOOLOPER(||);
         case '!': push(st, !pop(st) ? -1 : 0);
         case '=': BOOLOPER(==);
 
@@ -61,6 +63,8 @@ void interpret(char *word, stack *st) {
             }
             return;
     }
+
+    RLfind(word, st);
 }
 
 void eval(char input[], stack *st) {
