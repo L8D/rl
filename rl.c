@@ -2,21 +2,34 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define STACKTYPE float
+typedef union {
+    float f;
+    char *s;
+} item;
+
+#define STACKTYPE item
 #define STACKLEN 256
 #include "rlwords.c"
 
 #define WHITESPACE " \t\n\v\f\r"
-#define OPER(op) n = pop(st); push(st, pop(st) op n); return
-#define BOOLOPER(op) n = pop(st); push(st, pop(st) op n ? -1 : 0); return
+#define OPER(op) n = pop(st); push(st, (item) {pop(st).f op n.f}); return
+#define BOOLOPER(op) n = pop(st); push(st, (item) {pop(st).f op n.f ? -1 : 0}); return
 
 void interpret(char *word, stack *st) {
-    float n = 0;
+    item n = {0};
     char *r;
 
-    sscanf(word, "%g", &n);
-    if(n != 0 || *word == '0') {
+    sscanf(word, "%g", &n.f);
+    if(n.f != 0 || *word == '0') {
         push(st, n);
+        return;
+    }
+
+    if(*word == '"') {
+        strtok(NULL, "\"");
+        word[strlen(word)] = ' ';
+        word++;
+        push(st, (item) {.s = word});
         return;
     }
 
@@ -31,7 +44,7 @@ void interpret(char *word, stack *st) {
         case '<': BOOLOPER(<);
         case '&': BOOLOPER(&&);
         case '|': BOOLOPER(||);
-        case '!': push(st, !pop(st) ? -1 : 0);
+        case '!': push(st, (item) {!pop(st).f ? -1 : 0});
         case '=': BOOLOPER(==);
 
         case '_':
@@ -44,7 +57,7 @@ void interpret(char *word, stack *st) {
             return;
 
         case '.':
-            printf("%g\n", pop(st));
+            printf("%g\n", pop(st).f);
             return;
 
         case '?':
@@ -52,13 +65,13 @@ void interpret(char *word, stack *st) {
             r = strtok(NULL, WHITESPACE);
             while(r != NULL) {
                 if(*r == ':' && r[1] == 0) break;
-                if(n) interpret(r, st);
+                if(n.f) interpret(r, st);
                 r = strtok(NULL, WHITESPACE);
             }
 
             while(r != NULL) {
                 if(*r == ';' && r[1] == 0) break;
-                if(!n) interpret(r, st);
+                if(!n.f) interpret(r, st);
                 r = strtok(NULL, WHITESPACE);
             }
             return;
